@@ -21,7 +21,7 @@ def recurse(subreddit, hot_list=[], after=None):
         params['after'] = after
     
     try:
-        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response = requests.get(url, headers=headers, params=params, allow_redirects=False, timeout=10)
         if response.status_code != 200:
             return None if not hot_list else hot_list
         
@@ -38,5 +38,5 @@ def recurse(subreddit, hot_list=[], after=None):
         if after:
             return recurse(subreddit, hot_list, after)
         return hot_list
-    except:
+    except Exception:
         return None if not hot_list else hot_list

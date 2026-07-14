@@ -2,8 +2,8 @@
 """
 Module for querying the Reddit API and counting keywords in hot posts
 """
-import requests
 import re
+import requests
 
 
 def count_words(subreddit, word_list, after=None, word_count=None):
@@ -25,7 +25,7 @@ def count_words(subreddit, word_list, after=None, word_count=None):
         params['after'] = after
     
     try:
-        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response = requests.get(url, headers=headers, params=params, allow_redirects=False, timeout=10)
         if response.status_code != 200:
             if word_count:
                 print_results(word_count, word_list)
@@ -52,14 +52,17 @@ def count_words(subreddit, word_list, after=None, word_count=None):
         else:
             print_results(word_count, word_list)
             return
-    except:
+    except Exception:
         if word_count:
             print_results(word_count, word_list)
         return
 
 
 def print_results(word_count, word_list):
-    """Prints results in descending order by count."""
+    """
+    Prints the results in descending order by count,
+    then alphabetically for ties.
+    """
     if not word_count:
         return
     

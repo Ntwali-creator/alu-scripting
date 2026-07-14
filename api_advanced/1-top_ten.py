@@ -17,7 +17,7 @@ def top_ten(subreddit):
     params = {'limit': 10}
     
     try:
-        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response = requests.get(url, headers=headers, params=params, allow_redirects=False, timeout=10)
         if response.status_code != 200:
             print(None)
             return
@@ -31,5 +31,5 @@ def top_ten(subreddit):
         
         for child in children:
             print(child['data']['title'])
-    except:
+    except Exception:
         print(None)
