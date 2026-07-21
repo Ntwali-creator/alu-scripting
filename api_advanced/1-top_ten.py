@@ -12,17 +12,19 @@ def top_ten(subreddit):
         "User-Agent": "ALU-api-project/1.0"
     }
 
-    response = requests.get(url, headers=headers)
-
-    if response.status_code != 200:
-        print(None)
-        return
-
     try:
-        posts = response.json()["data"]["children"]
+        response = requests.get(url, headers=headers,
+                                allow_redirects=False)
+
+        data = response.json()
+        posts = data.get("data", {}).get("children")
+
+        if posts is None:
+            print(None)
+            return
 
         for post in posts[:10]:
-            print(post["data"]["title"])
+            print(post.get("data", {}).get("title"))
 
     except Exception:
         print(None)
