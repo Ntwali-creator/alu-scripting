@@ -22,20 +22,20 @@ def top_ten(subreddit):
         print(None)
         return
 
-    # Set a custom User-Agent
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                       'AppleWebKit/537.36'
     }
 
     url = 'https://www.reddit.com/r/{}/hot.json'.format(subreddit)
+    params = {'limit': 10}
 
     try:
         response = requests.get(
             url,
             headers=headers,
-            allow_redirects=False,
-            params={'limit': 10}
+            params=params,
+            allow_redirects=False
         )
 
         if response.status_code == 200:
@@ -47,7 +47,9 @@ def top_ten(subreddit):
                 return
 
             for post in posts:
-                print(post.get('data', {}).get('title'))
+                title = post.get('data', {}).get('title')
+                if title:
+                    print(title)
         else:
             print(None)
 
