@@ -1,13 +1,18 @@
 #!/usr/bin/python3
-import sys
+"""Prints the titles of the first 10 hot posts for a subreddit."""
+import requests
 
-if __name__ == '__main__':
-    recurse = __import__('2-recurse').recurse
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        result = recurse(sys.argv[1])
-        if result is not None:
-            print(len(result))
-        else:
-            print("None")
+
+def top_ten(subreddit):
+    """Print the first 10 hot post titles, or None if invalid."""
+    URL = "https://www.reddit.com/r/{}/hot.json".format(subreddit)
+    HEADERS = {"User-Agent": "PostmanRuntime/7.35.0"}
+    PARAMS = {"limit": 10}
+    try:
+        RESPONSE = requests.get(URL, headers=HEADERS, params=PARAMS,
+                                allow_redirects=False)
+        HOT_POSTS = RESPONSE.json().get("data").get("children")
+        for post in HOT_POSTS:
+            print(post.get("data").get("title"))
+    except Exception:
+        print(None)
