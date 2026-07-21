@@ -1,30 +1,37 @@
 #!/usr/bin/python3
 """
-Returns the number of subscribers from a subreddit
+Module for querying the Reddit API to get the number of subscribers
+for a given subreddit.
 """
+
 import requests
 
 
 def number_of_subscribers(subreddit):
-    """Set a custom header user-agent and query Reddit API"""
-    headers = {"User-Agent": "ALU-scripting API 0.1"}
+    """
+    Queries the Reddit API and returns the number of subscribers
+    for a given subreddit.
 
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    Args:
+        subreddit (str): The name of the subreddit to query.
 
-    try:
-        response = requests.get(
-            url,
-            headers=headers,
-            timeout=30,
-            allow_redirects=False
-        )
-
-    except requests.exceptions.RequestException:
+    Returns:
+        int: The number of subscribers, or 0 if the subreddit is invalid.
+    """
+    if subreddit is None or not isinstance(subreddit, str):
         return 0
 
-    if response.status_code == 200:
-        json_data = response.json()
-        subscriber_number = json_data.get("data", {}).get("subscribers", 0)
-        return subscriber_number
-    else:
+    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
+    headers = {"User-Agent": "PostmanRuntime/7.35.0"}
+
+    try:
+        response = requests.get(url, headers=headers, allow_redirects=False)
+
+        if response.status_code == 200:
+            data = response.json()
+            return data.get("data", {}).get("subscribers", 0)
+        else:
+            return 0
+
+    except Exception:
         return 0
